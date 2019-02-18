@@ -4,8 +4,16 @@
 
 # RENDU - TP1
 
- I.Mise en place de la VM
- - État du client1.tp1.b2
+ # README.md
+
+
+
+# RENDU - TP1
+
+
+## **I.Mise en place de la VM**
+
+ **A. État du client :** 
 
 
        1. Connexion ssh :
@@ -46,7 +54,7 @@
 
        
 
- - Basics
+  **B. Basics**
     
    - Routes 
    
@@ -69,7 +77,7 @@
          
 
          
-- Table ARP 
+   - Table ARP 
    
          1.On affiche les voisins : 
          [ewillian@client1 ~]$ ip neigh show 
@@ -84,11 +92,12 @@
         
 
      
-II. Communication simple entre deux machines 
+
+## **II. Communication simple entre deux machines**
 
    
 
- A. Ping et ARP
+ **A. Ping et ARP**
 
  
          1.Depuis le client 1 : 
@@ -105,9 +114,7 @@ II. Communication simple entre deux machines
 
 
 
-
-  
- B. Netcat
+ **B. Netcat**
 
  
 
