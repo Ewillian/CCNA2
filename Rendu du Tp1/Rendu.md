@@ -1,6 +1,4 @@
-
-
- # README.md
+# README.md
 
 
 
@@ -125,7 +123,7 @@
 
    - Analyse  Wireshark
 
-
+![enter image description here](https://github.com/Ewillian/CCNA2/blob/master/screens/wireshark-nc-udp.png)
 
  - TCP
 
@@ -153,7 +151,7 @@
          
     - Analyse  Wireshark
 
-
+![enter image description here](https://github.com/Ewillian/CCNA2/blob/master/screens/wireshark-nc-tcp.png)
 
  - FIREWALL
 
@@ -163,10 +161,8 @@
         Warning: NOT_ENABLED: 8888:tcp 
         success
          
-  
     - Analyse  Wireshark
 ![enter image description here](https://github.com/Ewillian/CCNA2/blob/master/screens/wireshark-firewall.png)
-
 
 
 
