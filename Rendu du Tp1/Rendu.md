@@ -163,7 +163,10 @@
         Warning: NOT_ENABLED: 8888:tcp 
         success
          
+  
     - Analyse  Wireshark
+![enter image description here](https://github.com/Ewillian/CCNA2/blob/master/screens/wireshark-firewall.png)
+
 
 
 
