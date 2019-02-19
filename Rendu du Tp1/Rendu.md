@@ -104,13 +104,25 @@
          
 
        
-   - Explication du ping avec Wireshark
+    
+ - Explication du ping avec Wireshark
+  ![enter image description here](https://github.com/Ewillian/CCNA2/blob/master/screens/wireshark-ping2.png)
 
+**1. ARP Broadcast** 
 
+-   trame n°1 :  `client1`  demande la MAC de la passerelle (c'est  `router1`)
+
+**2. UDP**
+
+-   les trames de 2 à 6 sont : 
+     - des paquets de types IPV4
+     - Le type de donnée de ces paquets IP  est un datagramme UDP.
+     - L'ip source de la machine est 10.1.1.1 donc la net1
+     - L'ip de destination est 239.255.255.250 : c'est une adresse IP multicast ( protocole SSDP).
+     -  
 
  **B. Netcat**
 
- 
 
  - UPD
 
@@ -125,6 +137,19 @@
 
 ![enter image description here](https://github.com/Ewillian/CCNA2/blob/master/screens/wireshark-nc-udp.png)
 
+
+**1. SSH** 
+
+-   trame n°1 :  connexion ssh entre le client1 et le pc 
+
+**2. UDP**
+
+-   les trames de 3 à 11 sont : 
+     - des paquets de types IPV4
+     - Le type de donnée de ces paquets IP  est un datagramme UDP.
+     - L'ip source de la machine est 10.1.1.1 donc la net1
+     - L'ip de destination est 239.255.255.250 : c'est une adresse IP multicast ( protocole SSDP).
+     -  
  - TCP
 
          1.Sur le client1:
@@ -153,6 +178,18 @@
 
 ![enter image description here](https://github.com/Ewillian/CCNA2/blob/master/screens/wireshark-nc-tcp.png)
 
+**1. SSH** 
+
+  -   trame n°3 :  `le serveur`  envoie une clé secrete au   `client1`)
+-   trame n°4 :  `le client1`  reçoit et la connexion à lieu 
+- 
+**2. UDP**
+
+-   les trames de 9 à 13 sont : 
+     - des paquets de types IPV4
+     - Le type de donnée de ces paquets IP  est un datagramme TCP.
+   Il y a donc un échange de paquets entre le client1 et le client2. 
+   
  - FIREWALL
 
       
@@ -164,6 +201,12 @@
     - Analyse  Wireshark
 ![enter image description here](https://github.com/Ewillian/CCNA2/blob/master/screens/wireshark-firewall.png)
 
+**1. SSH** 
 
+-   trame n°1 :  connexion ssh entre le client1 et le pc 
 
+**2. TCP**
 
+-  trame n°2 : transmission e flux de données entre le client1 et le serveur
+
+Ici Il s'agit d'une mise en place d'un tunnel TCP/IP via SSH
