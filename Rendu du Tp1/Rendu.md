@@ -210,3 +210,9 @@
 -  trame n°2 : transmission e flux de données entre le client1 et le serveur
 
 Ici Il s'agit d'une mise en place d'un tunnel TCP/IP via SSH
+
+## **III. Routage statique simple**
+
+       [ewillian@client2 ~]$ ip r
+        10.1.1.0/24 dev enp0s8 proto kernel scope link src 10.1.1.3 metric 101
+        10.1.2.0/30 via 10.1.1.2 dev enp0s8
