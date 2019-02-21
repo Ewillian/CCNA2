@@ -149,7 +149,7 @@
      - Le type de donnée de ces paquets IP  est un datagramme UDP.
      - L'ip source de la machine est 10.1.1.1 donc la net1
      - L'ip de destination est 239.255.255.250 : c'est une adresse IP multicast ( protocole SSDP).
-     -  
+     
  - TCP
 
          1.Sur le client1:
