@@ -119,7 +119,7 @@
      - Le type de donnée de ces paquets IP  est un datagramme UDP.
      - L'ip source de la machine est 10.1.1.1 donc la net1
      - L'ip de destination est 239.255.255.250 : c'est une adresse IP multicast ( protocole SSDP).
-     -  
+     
 
  **B. Netcat**
 
@@ -182,7 +182,7 @@
 
   -   trame n°3 :  `le serveur`  envoie une clé secrete au   `client1`)
 -   trame n°4 :  `le client1`  reçoit et la connexion à lieu 
-- 
+
 **2. UDP**
 
 -   les trames de 9 à 13 sont : 
