@@ -8,60 +8,18 @@
 
  **- I.Routage Statique**
 
-  
-
- 
-
 *- Ajouts des routes statiques :*
-
-    
-  -  Sur router1:
-
-    >     > [lilou@router1 network-scripts]$ ip route show
-    >     > 10.2.12.0/29 dev enp0s9 proto kernel scope link src 10.2.12.2 metric 102 [lilou@router1 network-scripts]$    `
-
-   -  Sur client1:
-
   
-
-    >         [lilou@client1 ~]$ cd /etc/sysconfig/network-scripts/
-    >         [lilou@client1 network-scripts]$ sudo cat /etc/sysconfig/network-scripts/route-enp0s8
-    >         [sudo] Mot de passe de lilou :
-    >         10.2.2.0/24 via 10.2.1.254 dev enp0s8
-    >         [lilou@client1 network-scripts]$`
-    >          `
-
-     
-
-
-   -  Sur router2:
-
-    > [lilou@router2 network-scripts]$ ip route show
-    >  10.2.2.0/24 dev enp0s8 proto kernel scope link src 10.2.2.254 metric 100
-    > 10.2.12.0/29 dev enp0s9 proto kernel scope link src 10.2.12.3 metric 101
-
-  
-   -  Sur server1:
-
-    > [lilou@server1 ~]$ cd /etc/sysconfig/network-scripts/
-    > [lilou@server1 network-scripts]$
-    > [lilou@server1 network-scripts]$ sudo cat  /etc/sysconfig/network-scripts/route-enp0s8
-    > [sudo] Mot de passe de lilou :
-    > 10.2.1.0/24 via 10.2.2.254 dev enp0s8
-    > [lilou@server1 network-scripts]$
-
- 
- 
-  
-
    - On ping :
    
-    >  [ewillian@client1 ~]$ ping 10.2.2.10 PING 10.2.2.10 (10.2.2.10)
-    > 56(84) bytes of data. 64 bytes from 10.2.2.10: icmp_seq=1 ttl=62
+    >  [ewillian@client1 ~]$ ping 10.2.2.10 
+    > PING 10.2.2.10 (10.2.2.10) 56(84) bytes of data. 64 bytes from 10.2.2.10: icmp_seq=1 ttl=62
     > time=1.33 ms 64 bytes from 10.2.2.10: icmp_seq=2 ttl=62 time=2.12 ms
     > ^C --- 10.2.2.10 ping statistics --- 2 packets transmitted, 2
     > received, 0% packet loss, time 1008ms rtt min/avg/max/mdev =
     > 1.337/1.730/2.123/0.393 ms
+    
+    Le ping est bien envoyé à server1 depuis client en passant par les deux routers.
 
 ***Conclusion :*** Router 1 ne peut pas ping server 1 || Router 2 ne peut pas ping client 1 car il ne connaissent pas de route pour leurs envoyer des paquets.
 
@@ -86,16 +44,19 @@ Elles ont des adresses mac différentes
     > lang="fr"><head><meta content="text/html; charset=UTF-8"
     > http-equiv="Content-Type"><meta
     > content="/images/branding/googleg/1x/googleg_standard_color_128dp.png"
-    > 
+    
     > [ewillian@router2 network-scripts]$ curl https://www.google.com
     > <!doctype html><html itemscope="" itemtype="http://schema.org/WebPage"
     > lang="fr"><head><meta content="text/html; charset=UTF-8"
     > http-equiv="Content-Type"><meta
     > content="/images/branding/googleg/1x/googleg_standard_color_128dp.png"
     > itemprop="image"><title>Google</title>
-    > 
+    
     > [ewillian@server1 ~]$ curl https://www.google.fr curl: (6) Could not
     > resolve host: www.google.fr; Erreur inconnue
+    
+    Client1 et Router2 ont bien accès à internet contrairement à Server1.
+ 
 
  **- DHCP server**
 
@@ -152,4 +113,4 @@ Elles ont des adresses mac différentes
 -   on a des  **routeurs**
     -   qui peuvent faire passer le trafic d'un réseau à l'autre
     -   qui possèdent un lien dédié (le  `/30`)
-    -   l'un d'eux fait du  **NAT**  pour permettre à tout le monde d'accéder à Internet
+    -   l'un d'eux fait du  **NAT**  pour permettre à tout le monde d'accéder à Internet (sauf server1 pour question de sécurité)
