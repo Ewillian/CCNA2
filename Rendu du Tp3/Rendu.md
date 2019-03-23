@@ -155,7 +155,7 @@ FastEthernet0/0            10.3.100.18     YES manual up                    up
 FastEthernet1/0            10.3.100.21     YES manual up                    up
 ```
 
-Donc après configuration, chaque routeur peut ping sont voisin:
+Donc après configuration, chaque routeur peut ping son voisin:
 
 ``````
 R1#ping 10.3.102.10
@@ -312,9 +312,38 @@ Autrement dit l'arborescence fonctionne !!!
 
 Bien testons ping de client1 vers server1
 
-![Ping3](https://github.com/Ewillian/CCNA2/blob/master/Rendu%20du%20Tp3/captures/Capture7.png?raw=true)
+![Schéma](https://github.com/Ewillian/CCNA2/blob/master/Rendu%20du%20Tp3/captures/Capture7.png?raw=true)
 
 Tout fonctionne :ok_hand: !!
 
 ## IV. Lab Final
+
+![Schéma]()
+
+
+
+- Routeurs:
+
+| Hosts              | `10.3.100.0/30` | `10.3.100.4/30` | `10.3.100.8/30`  | `10.3.100.12/30` | `10.33.10.0/24` | `10.33.20.0/24` |
+| ------------------ | --------------- | --------------- | ---------------- | ---------------- | --------------- | --------------- |
+| `router1.lab3.tp4` | `10.3.100.1/30` | x               | x                | `10.3.100.14/30` | `10.33.10.254`  | x               |
+| `router2.lab3.tp4` | `10.3.100.2/30` | `10.3.100.4/30` | x                | x                | x               | x               |
+| `router3.lab3.tp4` | x               | `10.3.100.5/30` | `10.3.100.9/30`  | x                | x               | x               |
+| `router4.lab3.tp4` | x               | x               | `10.3.100.10/30` | `10.3.100.13/30` | x               | `10.33.20.254`  |
+
+- AREA 1:
+
+| Hosts              | `10.33.10.0/24` |
+| ------------------ | --------------- |
+| `client1.lab3.tp4` | `10.33.10.1`    |
+| `client2.lab3.tp4` | `10.33.10.2`    |
+| `server1.lab3.tp4` | `10.33.10.3`    |
+
+- AREA 2:
+
+| Hosts              | `10.33.20.0/24` |
+| ------------------ | --------------- |
+| `client3.lab3.tp4` | `10.33.20.1`    |
+| `client4.lab3.tp4` | `10.33.20.2`    |
+| `server2.lab3.tp4` | `10.33.20.3`    |
 
