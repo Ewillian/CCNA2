@@ -45,7 +45,7 @@ Avec ces **Ping **, on peut voir que client1 et client3 communiquent sans probl�
 
 ## II. Manipulation simple de routeurs
 
-![Ping client 1 <-> 3 !! 2](https://github.com/Ewillian/CCNA2/blob/master/Rendu%20du%20Tp3/captures/Capture3.png?raw=true)
+![Routeur Config](https://github.com/Ewillian/CCNA2/blob/master/Rendu%20du%20Tp3/captures/Capture3.png?raw=true)
 
 Après configuration de bases (Changer nom de domaine, ip static, etc....) pour **les clients** et **server1**, il faut **configurer les routeurs R1 et R2**.
 
@@ -86,17 +86,17 @@ Après configuration de bases (Changer nom de domaine, ip static, etc....) pour 
 
   On fait les pings !!
 
-  ![Ping client 1 <-> 3 !! 2](https://github.com/Ewillian/CCNA2/blob/master/Rendu%20du%20Tp3/captures/Captures4.png?raw=true)
+  ![Ping2](https://github.com/Ewillian/CCNA2/blob/master/Rendu%20du%20Tp3/captures/Captures4.png?raw=true)
 
 **Tous le monde peut communiquer sauf client1 car il n'a pas de passerelle !!!**
 
 Pour que tout le monde puisse communiquer, il faudrait ajouter un Switch entre R1 et client1 / client2.
 
-![Ping client 1 <-> 3 !! 2](https://github.com/Ewillian/CCNA2/blob/master/Rendu%20du%20Tp3/captures/Cpature5.png?raw=true)
+![Config imma](https://github.com/Ewillian/CCNA2/blob/master/Rendu%20du%20Tp3/captures/Cpature5.png?raw=true)
 
 ## III. Mise en place d'OSPF
 
-![Ping client 1 <-> 3 !! 2](https://github.com/Ewillian/CCNA2/blob/master/Rendu%20du%20Tp3/captures/Capture8.png?raw=true)
+![Config3](https://github.com/Ewillian/CCNA2/blob/master/Rendu%20du%20Tp3/captures/Capture8.png?raw=true)
 
 Après configuration de bases (Changer nom de domaine, ip static, etc....), il faut définir toutes les routes sur tout les routers:
 
@@ -286,4 +286,35 @@ Activer OSPF
 # show ip ospf border-routers
 ``````
 
-Après avoir partagé toutes les routes avec tous le monde et avoir mis la route par défaut du client et du serveur, testons au hasard 3 pings
+Après avoir partagé toutes les routes avec tous le monde et avoir mis la route par défaut du client et du serveur, testons au hasard 3 pings.
+
+```
+R6#ping 10.3.100.6
+
+Type escape sequence to abort.
+Sending 5, 100-byte ICMP Echos to 10.3.100.6, timeout is 2 seconds:
+!!!!!
+Success rate is 100 percent (5/5), round-trip min/avg/max = 32/46/64 ms
+```
+
+```
+R2#ping 10.3.101.10
+
+Type escape sequence to abort.
+Sending 5, 100-byte ICMP Echos to 10.3.101.10, timeout is 2 seconds:
+!!!!!
+Success rate is 100 percent (5/5), round-trip min/avg/max = 16/38/64 ms
+```
+
+![Ping3](https://github.com/Ewillian/CCNA2/blob/master/Rendu%20du%20Tp3/captures/Capture6.png?raw=true)
+
+Autrement dit l'arborescence fonctionne !!!
+
+Bien testons ping de client1 vers server1
+
+![Ping3](https://github.com/Ewillian/CCNA2/blob/master/Rendu%20du%20Tp3/captures/Capture7.png?raw=true)
+
+Tout fonctionne :ok_hand: !!
+
+## IV. Lab Final
+
