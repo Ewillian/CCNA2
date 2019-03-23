@@ -21,7 +21,9 @@ Tout d'abord, on configure **IOU1** (ou **switch N°1**) pour définir une **VLA
 (config-if)# switchport access vlan 10
 ``````
 
-Même chose sur l'interface 0/2 en remplaçant **vlan 10** par **vlan 20**.
+Même chose sur l'interface 0/2 en remplaçant **vlan 10** par **vlan 20** (**Switch n°1**).
+
+On réutilise ses commandes pour mettre **client3** dans le **Vlan 10** (**Switch n°2**).
 
 - Définir Trunk
 
@@ -31,4 +33,15 @@ Même chose sur l'interface 0/2 en remplaçant **vlan 10** par **vlan 20**.
 (config-if)# switchport mode trunk
 ``````
 
-On effectue ces commandes sur les deux switch (vu qu'ils utilisent interface 0/0 tous les deux rien à modifier :smile: !!)
+On effectue ces commandes sur les **deux switch** (vu qu'ils utilisent interface 0/0 tous les deux rien à modifier :smile: !!)
+
+Et voila !! Plus qu'a ping !!
+
+```Plein de ping imaginaires qui marchent entre client 1 et client 3 mais pas vers client 2```
+
+Avec ces **Ping imaginaires**, on peut voir que client1 et client3 communiquent sans problème mais vu que client2 est dans un **Vlan différent** (Vlan 10 != Vlan20) des deux autres, **il ne peut échanger avec eux**.
+
+
+
+## II. Manipulation simple de routeurs
+
