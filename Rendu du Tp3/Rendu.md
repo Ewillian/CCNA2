@@ -92,5 +92,198 @@ Après configuration de bases (Changer nom de domaine, ip static, etc....) pour 
 
 Pour que tout le monde puisse communiquer, il faudrait ajouter un Switch entre R1 et client1 / client2.
 
-![Ping client 1 <-> 3 !! 2](https://github.com/Ewillian/CCNA2/blob/master/Rendu%20du%20Tp3/captures/Captures4.png?raw=true)
+![Ping client 1 <-> 3 !! 2](https://github.com/Ewillian/CCNA2/blob/master/Rendu%20du%20Tp3/captures/Cpature5.png?raw=true)
 
+## III. Mise en place d'OSPF
+
+![Ping client 1 <-> 3 !! 2](https://github.com/Ewillian/CCNA2/blob/master/Rendu%20du%20Tp3/captures/Capture8.png?raw=true)
+
+Après configuration de bases (Changer nom de domaine, ip static, etc....), il faut définir toutes les routes sur tout les routers:
+
+- Ajouter une route statique
+
+``````
+# conf t
+(config)# ip route <REMOTE_NETWORK_ADDRESS> <MASK> <GATEWAY_IP> 
+(config)# exit
+# show ip route
+``````
+
+Après installation voici le résultat :
+
+```
+R1#show ip int br
+Interface                  IP-Address      OK? Method Status                Protocol
+FastEthernet0/0            10.3.100.1      YES manual up                    up
+FastEthernet1/0            10.3.100.22     YES manual up                    up
+FastEthernet2/0            10.3.102.254    YES manual up                    up
+```
+
+```
+R2#show ip int br
+Interface                  IP-Address      OK? Method Status                Protocol
+FastEthernet0/0            10.3.100.2      YES manual up                    up
+FastEthernet1/0            10.3.100.5      YES manual up                    up
+```
+
+```
+R3#show ip int br
+Interface                  IP-Address      OK? Method Status                Protocol
+FastEthernet0/0            10.3.100.6      YES manual up                    up
+FastEthernet1/0            10.3.100.9      YES manual up                    up
+```
+
+```
+R4#show ip int br
+Interface                  IP-Address      OK? Method Status                Protocol
+FastEthernet0/0            10.3.100.10     YES manual up                    up
+FastEthernet1/0            10.3.100.13     YES manual up                    up
+FastEthernet2/0            10.3.101.254    YES manual up                    up
+```
+
+```
+R5#show ip int br
+Interface                  IP-Address      OK? Method Status                Protocol
+FastEthernet0/0            10.3.100.14     YES manual up                    up
+FastEthernet1/0            10.3.100.17     YES manual up                    up
+```
+
+```
+R6#show ip int br
+Interface                  IP-Address      OK? Method Status                Protocol
+FastEthernet0/0            10.3.100.18     YES manual up                    up
+FastEthernet1/0            10.3.100.21     YES manual up                    up
+```
+
+Donc après configuration, chaque routeur peut ping sont voisin:
+
+``````
+R1#ping 10.3.102.10
+
+Type escape sequence to abort.
+Sending 5, 100-byte ICMP Echos to 10.3.102.10, timeout is 2 seconds:
+.!!!!
+Success rate is 80 percent (4/5), round-trip min/avg/max = 36/43/52 ms
+R1#ping 10.3.100.21
+
+Type escape sequence to abort.
+Sending 5, 100-byte ICMP Echos to 10.3.100.21, timeout is 2 seconds:
+!!!!!
+Success rate is 100 percent (5/5), round-trip min/avg/max = 32/57/64 ms
+R1#ping 10.3.100.2
+
+Type escape sequence to abort.
+Sending 5, 100-byte ICMP Echos to 10.3.100.2, timeout is 2 seconds:
+!!!!!
+Success rate is 100 percent (5/5), round-trip min/avg/max = 32/47/68 ms
+
+------
+
+R2#ping 10.3.100.1
+
+Type escape sequence to abort.
+Sending 5, 100-byte ICMP Echos to 10.3.100.1, timeout is 2 seconds:
+!!!!!
+Success rate is 100 percent (5/5), round-trip min/avg/max = 64/66/68 ms
+R2#ping 10.3.100.6
+
+Type escape sequence to abort.
+Sending 5, 100-byte ICMP Echos to 10.3.100.6, timeout is 2 seconds:
+!!!!!
+Success rate is 100 percent (5/5), round-trip min/avg/max = 64/72/100 ms
+
+------
+
+
+R3#ping 10.3.100.5
+
+Type escape sequence to abort.
+Sending 5, 100-byte ICMP Echos to 10.3.100.5, timeout is 2 seconds:
+!!!!!
+Success rate is 100 percent (5/5), round-trip min/avg/max = 64/67/72 ms
+R3#ping 10.3.100.10
+
+Type escape sequence to abort.
+Sending 5, 100-byte ICMP Echos to 10.3.100.10, timeout is 2 seconds:
+!!!!!
+Success rate is 100 percent (5/5), round-trip min/avg/max = 64/72/100 ms
+R4#ping 10.3.100.9
+
+Type escape sequence to abort.
+Sending 5, 100-byte ICMP Echos to 10.3.100.9, timeout is 2 seconds:
+!!!!!
+Success rate is 100 percent (5/5), round-trip min/avg/max = 64/66/68 ms
+
+------
+
+R4#ping 10.3.100.14
+
+Type escape sequence to abort.
+Sending 5, 100-byte ICMP Echos to 10.3.100.14, timeout is 2 seconds:
+!!!!!
+Success rate is 100 percent (5/5), round-trip min/avg/max = 64/71/92 ms
+R4#ping 10.3.101.10
+
+Type escape sequence to abort.
+Sending 5, 100-byte ICMP Echos to 10.3.101.10, timeout is 2 seconds:
+!!!!!
+Success rate is 100 percent (5/5), round-trip min/avg/max = 36/44/60 ms
+
+
+------
+
+R5#ping 10.3.100.13
+
+Type escape sequence to abort.
+Sending 5, 100-byte ICMP Echos to 10.3.100.13, timeout is 2 seconds:
+!!!!!
+Success rate is 100 percent (5/5), round-trip min/avg/max = 32/47/64 ms
+R5#ping 10.3.100.18
+
+Type escape sequence to abort.
+Sending 5, 100-byte ICMP Echos to 10.3.100.18, timeout is 2 seconds:
+!!!!!
+Success rate is 100 percent (5/5), round-trip min/avg/max = 64/66/68 ms
+
+------
+
+R6#ping 10.3.100.17
+
+Type escape sequence to abort.
+Sending 5, 100-byte ICMP Echos to 10.3.100.17, timeout is 2 seconds:
+!!!!!
+Success rate is 100 percent (5/5), round-trip min/avg/max = 36/59/96 ms
+R6#ping 10.3.100.22
+
+Type escape sequence to abort.
+Sending 5, 100-byte ICMP Echos to 10.3.100.22, timeout is 2 seconds:
+!!!!!
+Success rate is 100 percent (5/5), round-trip min/avg/max = 32/40/64 ms
+``````
+
+Maintenant il fauuuuuut:
+
+- Configurer le OSPF
+
+Autrement dit:
+
+``````
+//Passer en mode configuration
+# conf t
+Activer OSPF
+(config)# router ospf <ID OSPF>
+(config-router)# router-id 1.1.1.1
+(config-router)# network <NETWORK ADDRESS> <NETWORK MASK> area <ID AREA>
+<=> (config-router)# network 10.6.100.0 0.0.0.3 area 0
+//0.0.0.3 == 255.255.255.252
+//0.0.0.255 == 255.255.255.0
+//En gros l'inverse du mask habituel
+
+//pour vérifier l'état OSPF
+# show ip protocols
+# show ip ospf interface
+# show ip ospf neigh
+# show ip ospf border-routers
+``````
+
+Après avoir partagé toutes les routes avec tous le monde et avoir mis la route par défaut du client et du serveur, testons au hasard 3 pings
