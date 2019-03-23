@@ -37,9 +37,9 @@ On effectue ces commandes sur les **deux switch** (vu qu'ils utilisent interface
 
 Et voila !! Plus qu'a ping !!
 
-```Plein de ping imaginaires qui marchent entre client 1 et client 3 mais pas vers client 2```
+![Ping client 1 <-> 3 !! 2](https://github.com/Ewillian/CCNA2/blob/master/Rendu%20du%20Tp3/captures/Capture2.png?raw=true)
 
-Avec ces **Ping imaginaires**, on peut voir que client1 et client3 communiquent sans problème mais vu que client2 est dans un **Vlan différent** (Vlan 10 != Vlan20) des deux autres, **il ne peut échanger avec eux**.
+Avec ces **Ping **, on peut voir que client1 et client3 communiquent sans problème mais vu que client2 est dans un **Vlan différent** (Vlan 10 != Vlan20) des deux autres, **il ne peut échanger avec eux**.
 
 
 
