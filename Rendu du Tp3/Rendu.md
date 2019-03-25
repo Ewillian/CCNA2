@@ -53,7 +53,7 @@ Après configuration de bases (Changer nom de domaine, ip static, etc....) pour 
 
   ``````
   # conf t
-  (config)# interface ethernet <NUMERO>
+  (config)# interface FastEthernet <NUMERO>
   (config-if)# ip address <IP> <MASK>
   (config-if)# no shut
   (config-if)# exit
@@ -320,7 +320,7 @@ Tout fonctionne :ok_hand: !!
 
 **Topologie**
 
-![Schéma](https://github.com/Ewillian/CCNA2/blob/master/Rendu%20du%20Tp3/captures/TopologieMK1.png?raw=true)
+![Schéma](https://github.com/Ewillian/CCNA2/blob/master/Rendu%20du%20Tp3/captures/Topologie.png?raw=true)
 
 - Routeurs:
 
@@ -341,3 +341,128 @@ Tout fonctionne :ok_hand: !!
 | `client3.lab3.tp4` | `10.33.20.4`    |
 | `client4.lab3.tp4` | `10.33.20.5`    |
 | `server2.lab3.tp4` | `10.33.20.6`    |
+
+- On commence par la configuration de base des routeurs:
+
+``` # conf t
+(config)# interface FastEthernet <NUMERO>
+(config-if)# ip address <IP> <MASK>
+(config-if)# no shut
+(config-if)# exit
+(config)# exit
+# show ip int br
+```
+
+On teste les ping :
+
+``` 
+R1#ping 10.3.100.2
+
+Type escape sequence to abort.
+Sending 5, 100-byte ICMP Echos to 10.3.100.2, timeout is 2 seconds:
+!!!!!
+Success rate is 100 percent (5/5), round-trip min/avg/max = 32/58/68 ms
+R1#ping 10.3.100.13
+
+Type escape sequence to abort.
+Sending 5, 100-byte ICMP Echos to 10.3.100.13, timeout is 2 seconds:
+!!!!!
+Success rate is 100 percent (5/5), round-trip min/avg/max = 32/58/68 ms
+
+------
+
+Sending 5, 100-byte ICMP Echos to 10.3.100.1, timeout is 2 seconds:
+!!!!!
+Success rate is 100 percent (5/5), round-trip min/avg/max = 64/65/68 ms
+R2#ping 10.3.100.6
+
+Type escape sequence to abort.
+Sending 5, 100-byte ICMP Echos to 10.3.100.6, timeout is 2 seconds:
+!!!!!
+Success rate is 100 percent (5/5), round-trip min/avg/max = 40/58/72 ms
+
+------
+
+R4#ping 10.3.100.5
+
+Type escape sequence to abort.
+Sending 5, 100-byte ICMP Echos to 10.3.100.5, timeout is 2 seconds:
+!!!!!
+Success rate is 100 percent (5/5), round-trip min/avg/max = 40/59/64 ms
+R4#ping 10.3.100.10
+
+Type escape sequence to abort.
+Sending 5, 100-byte ICMP Echos to 10.3.100.10, timeout is 2 seconds:
+!!!!!
+Success rate is 100 percent (5/5), round-trip min/avg/max = 64/65/68 ms
+
+------
+
+
+R3#ping 10.3.100.9
+
+Type escape sequence to abort.
+Sending 5, 100-byte ICMP Echos to 10.3.100.9, timeout is 2 seconds:
+!!!!!
+Success rate is 100 percent (5/5), round-trip min/avg/max = 64/65/68 ms
+R3#ping 10.3.100.14
+
+Type escape sequence to abort.
+Sending 5, 100-byte ICMP Echos to 10.3.100.14, timeout is 2 seconds:
+!!!!!
+Success rate is 100 percent (5/5), round-trip min/avg/max = 32/38/56 ms
+
+```
+
+Tout fonctionne :ok_hand: !! 
+
+
+
+- Passons aux clients !
+
+Par exemple pour définir l'ip statique de client 1:
+
+````
+sudo /etc/sysconfig/network-scripts/ifcfg-enp0s8
+
+NAME=enp0s3
+DEVICE=enp0s3
+
+BOOTPROTO=static
+ONBOOT=yes
+
+IPADDR=10.33.10.1
+NETMASK=255.255.255.0
+````
+
+et son nom de domaine :
+
+````
+echo 'client1.lab3.tp4' | sudo tee /etc/hostname
+reboot
+````
+
+Testons des `traceroute` au hasard !
+
+
+
+- Config les switch !
+
+Par exemple la config **Vlan 10** du côté de **IOU2** sur **l'interface 0/1**
+
+````
+IOU2#conf t
+Enter configuration commands, one per line.  End with CNTL/Z.
+IOU2(config)#vlan 10
+IOU2(config-vlan)#name client-network
+IOU2(config-vlan)#exit
+IOU2(config)#interface Ethernet 0/1
+IOU2(config-if)#switchport mode access
+IOU2(config-if)#switchport access vlan 10
+IOU2(config-if)#exit
+````
+
+On fait ça pour **0/1**, **0/2** sur **IOU1** comme **IOU2**.
+
+- Maintenant la config de l'**interface 2/0** de **R1**
+
