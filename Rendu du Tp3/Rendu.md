@@ -320,7 +320,7 @@ Tout fonctionne :ok_hand: !!
 
 **Topologie**
 
-![Schéma](https://github.com/Ewillian/CCNA2/blob/master/Rendu%20du%20Tp3/captures/Topologie.png?raw=true)
+![Schéma](https://github.com/Ewillian/CCNA2/blob/master/Rendu%20du%20Tp3/captures/TopologieFinal.png?raw=true)
 
 - Routeurs:
 
@@ -465,4 +465,29 @@ IOU2(config-if)#exit
 On fait ça pour **0/1**, **0/2** sur **IOU1** comme **IOU2**.
 
 - Maintenant la config de l'**interface 2/0** de **R1**
+
+On met en place un router-on-a-stick.
+
+Pour ça, on créer et configure 2 **sous-interface**, `fastEthernet 2/0.10` pour le **Vlan10** et `fastEthernet 2/0.20` pour **le Vlan20**.
+
+``````
+//Déninition des ip
+R1(config)#interface fastEthernet 2/0.10
+R1(config-subif)#encapsulation dot1q 10
+R1(config-subif)#ip address 10.33.10.254 255.255.255.0
+R1(config-subif)#exit
+R1(config)#interface fastEthernet 2/0.20
+R1(config-subif)#encapsulation dot1q 20
+R1(config-subif)#ip address 10.33.20.254 255.255.255.0
+R1(config-subif)#exit
+R1(config)#exit
+
+R1#show ip int br
+Interface                  IP-Address      OK? Method Status                Protocol
+FastEthernet0/0            10.3.100.14     YES NVRAM  up                    up
+FastEthernet1/0            10.3.100.1      YES NVRAM  up                    up
+FastEthernet2/0            unassigned      YES manual up                    up
+FastEthernet2/0.10         10.33.10.254    YES manual up                    up
+FastEthernet2/0.20         10.33.20.254    YES manual up                    up
+``````
 
