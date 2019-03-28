@@ -324,12 +324,12 @@ Tout fonctionne :ok_hand: !!
 
 - Routeurs:
 
-| Hosts              | `10.3.100.0/30` | `10.3.100.4/30` | `10.3.100.8/30`  | `10.3.100.12/30` | `10.33.10.0/24` |
-| ------------------ | --------------- | --------------- | ---------------- | ---------------- | --------------- |
-| `router1.lab3.tp4` | `10.3.100.1/30` | x               | x                | `10.3.100.14/30` | `10.33.10.254`  |
-| `router2.lab3.tp4` | `10.3.100.2/30` | `10.3.100.5/30` | x                | x                | x               |
-| `router3.lab3.tp4` | x               | `10.3.100.6/30` | `10.3.100.9/30`  | x                | x               |
-| `router4.lab3.tp4` | x               | x               | `10.3.100.10/30` | `10.3.100.13/30` | x               |
+| Hosts              | `10.3.100.0/30` | `10.3.100.4/30` | `10.3.100.8/30`  | `10.3.100.12/30` | `10.33.10.0/24` |      |
+| ------------------ | --------------- | --------------- | ---------------- | ---------------- | --------------- | ---- |
+| `router1.lab3.tp4` | `10.3.100.1/30` | x               | x                | `10.3.100.14/30` | `10.33.10.254`  |      |
+| `router2.lab3.tp4` | `10.3.100.2/30` | `10.3.100.5/30` | x                | x                | x               |      |
+| `router4.lab3.tp4` | x               | `10.3.100.6/30` | `10.3.100.9/30`  | x                | x               |      |
+| `router3.lab3.tp4` | x               | x               | `10.3.100.10/30` | `10.3.100.13/30` | x               |      |
 
 - AREA 1:
 
@@ -511,7 +511,42 @@ sudo nano /etc/sysconfig/network-scripts/route-enp0s3
 10.33.20.0/24 via 10.33.10.254 dev enp0s3
 ``````
 
+Résultat:
+
 ![Client 1 --> R1 --> Server 1](https://github.com/Ewillian/CCNA2/blob/master/Rendu%20du%20Tp3/captures/TracerouteClient1Server1.png?raw=true)
 
 ![Server 1 --> R1 --> Client 4](https://github.com/Ewillian/CCNA2/blob/master/Rendu%20du%20Tp3/captures/Traceroute2.png?raw=true)
+
+Mise en place de l'OSPF maintenant !
+
+Exemple pour partager le réseau 10.3.100.0 dans l'area 0 avec un /30.
+
+``````
+R1#conf t
+R1(config)#router ospf 1
+R1(config-router)#router-id 1.1.1.1
+R1(config-router)#network 10.3.100.0 0.0.0.3  area 0
+``````
+
+Après avoir aussi défini les routes vers l'area 0 dans les client et servers tout le monde peut se ping !
+
+![Client 1 --> R1 --> Server 1](https://github.com/Ewillian/CCNA2/blob/master/Rendu%20du%20Tp3/captures/OSPFPing.png?raw=true)
+
+On observe que le ping est passé par 10.3.100.13. Donc logiquement si tout fonctionne et que l'on coupe l'interface correspondant à cette ip le ping devrait passer par l'interface !!!!
+
+Testons
+
+``````
+R3#conf t
+Enter configuration commands, one per line.  End with CNTL/Z.
+R3(config)#int fastEthernet 1/0
+R3(config-if)#shut
+*Mar  1 00:55:45.511: %OSPF-5-ADJCHG: Process 1, Nbr 1.1.1.1 on FastEthernet1/0 from FULL to DOWN, Neighbor Down: Interface down or detached
+``````
+
+![Client 1 --> R1 --> Server 1](https://github.com/Ewillian/CCNA2/blob/master/Rendu%20du%20Tp3/captures/NoTraceroute.png?raw=true)
+
+L'interface est donc bien inaccessible. Voyons voir si ça marche toujours.
+
+![Client 1 --> R1 --> Server 1](https://github.com/Ewillian/CCNA2/blob/master/Rendu%20du%20Tp3/captures/TracerouteOSPF.png?raw=true) 
 
