@@ -577,5 +577,37 @@ FastEthernet2/0            192.168.122.73  YES DHCP   up                    up
 
 L'interface FastEthernet2/0 à bien récupéré un adresse ip.
 
-Plus qu'à essayer de ping google à partir d'un client et de R4.
+``````
+R4#ping 8.8.8.8
 
+Type escape sequence to abort.
+Sending 5, 100-byte ICMP Echos to 8.8.8.8, timeout is 2 seconds:
+.!!!!
+Success rate is 80 percent (4/5), round-trip min/avg/max = 20/20/20 ms
+``````
+
+R4 est bien connecté à internet. il ne reste plus qu'à partager internet à tous les autres.
+
+``````
+R4#conf t
+Enter configuration commands, one per line.  End with CNTL/Z.
+//Définition interface interne et externe
+R4(config)#interface fastEthernet 0/0
+R4(config-if)#ip nat inside
+R4(config)#interface fastEthernet 1/0
+R4(config-if)#ip nat inside
+R4(config)#interface fastEthernet 2/0
+R4(config-if)#ip nat outside
+R4(config-if)#exit
+//Définition autorisations
+R4(config)#ip nat inside source list 1 interface fastEthernet 0/0 overload
+R4(config)#ip nat inside source list 1 interface fastEthernet 1/0 overload
+R4(config)#access-list 1 permit any
+//Partage de l'accès internet avec ospf
+R4(config)#router ospf 1
+R4(config)#default-inf ori
+``````
+
+Plus qu'à effectuer le traceroute final !!
+
+![Client 1 --> R1 --> Server 1](https://github.com/Ewillian/CCNA2/blob/master/Rendu%20du%20Tp3/captures/FinalPing.png?raw=true)
