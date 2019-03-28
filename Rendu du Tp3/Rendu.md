@@ -532,7 +532,7 @@ Après avoir aussi défini les routes vers l'area 0 dans les client et servers t
 
 ![Client 1 --> R1 --> Server 1](https://github.com/Ewillian/CCNA2/blob/master/Rendu%20du%20Tp3/captures/OSPFPing.png?raw=true)
 
-On observe que le ping est passé par 10.3.100.13. Donc logiquement si tout fonctionne et que l'on coupe l'interface correspondant à cette ip le ping devrait passer par l'interface !!!!
+On observe que le ping est passé par 10.3.100.13. Donc logiquement si tout fonctionne et que l'on coupe l'interface correspondant à cette ip le ping devrait passer par l'interface 10.3.100.2 !!!!
 
 Testons
 
@@ -549,4 +549,33 @@ R3(config-if)#shut
 L'interface est donc bien inaccessible. Voyons voir si ça marche toujours.
 
 ![Client 1 --> R1 --> Server 1](https://github.com/Ewillian/CCNA2/blob/master/Rendu%20du%20Tp3/captures/TracerouteOSPF.png?raw=true) 
+
+Nikel tout fonctionne comme prévu :ok_hand:.
+
+Maintenant passons à la configuration NAT.
+
+- NAT
+
+Alors passons à la configuration de R4 lié à la NAT de GNS3
+
+``````
+R4#conf t
+Enter configuration commands, one per line.  End with CNTL/Z.
+R4(config)#interface fastEthernet 2/0
+R4(config-if)#ip address dhcp
+R4(config-if)#no shut
+*Mar  1 01:20:48.215: %LINK-3-UPDOWN: Interface FastEthernet2/0, changed state to up
+*Mar  1 01:20:49.215: %LINEPROTO-5-UPDOWN: Line protocol on Interface FastEthernet2/0, changed state to up
+R4(config-if)#exit
+R4(config)#exit
+R4#show ip int br
+Interface                  IP-Address      OK? Method Status                Protocol
+FastEthernet0/0            10.3.100.6      YES NVRAM  up                    up
+FastEthernet1/0            10.3.100.9      YES NVRAM  up                    up
+FastEthernet2/0            192.168.122.73  YES DHCP   up                    up
+``````
+
+L'interface FastEthernet2/0 à bien récupéré un adresse ip.
+
+Plus qu'à essayer de ping google à partir d'un client et de R4.
 
