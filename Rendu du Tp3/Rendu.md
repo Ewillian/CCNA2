@@ -491,3 +491,27 @@ FastEthernet2/0.10         10.33.10.254    YES manual up                    up
 FastEthernet2/0.20         10.33.20.254    YES manual up                    up
 ``````
 
+Entre les switch et le routeur, il faut mettre en place le TRUNK en donnant accès aux paquets venants des 2 Vlans.
+
+``````
+(config)# interface Ethernet 0/0
+(config-if)# switchport trunk encapsulation dot1q
+(config-if)# switchport mode trunk
+(config-if)#switchport trunk allowed vlan add 10
+(config-if)#switchport trunk allowed vlan add 20
+``````
+
+Ensuite plus qu'à mettre les routes sur les clients / servers avec:
+
+``````
+sudo nano /etc/sysconfig/network-scripts/route-enp0s3
+//Vers Vlan 10
+10.33.10.0/24 via 10.33.20.254 dev enp0s3
+//Vers Vlan 20
+10.33.20.0/24 via 10.33.10.254 dev enp0s3
+``````
+
+![Client 1 --> R1 --> Server 1](https://github.com/Ewillian/CCNA2/blob/master/Rendu%20du%20Tp3/captures/TracerouteClient1Server1.png?raw=true)
+
+![Server 1 --> R1 --> Client 4](https://github.com/Ewillian/CCNA2/blob/master/Rendu%20du%20Tp3/captures/Traceroute2.png?raw=true)
+
