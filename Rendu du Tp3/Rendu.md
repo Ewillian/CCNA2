@@ -611,3 +611,5 @@ R4(config)#default-inf ori
 Plus qu'à effectuer le traceroute final !!
 
 ![Client 1 --> R1 --> Server 1](https://github.com/Ewillian/CCNA2/blob/master/Rendu%20du%20Tp3/captures/FinalPing.png?raw=true)
+
+Et voila ! Fin du Tp !!
