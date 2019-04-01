@@ -21,6 +21,8 @@ Dépôt git dédié aux rendu du cours de CCNA2
 
 ## Membres du Projet
 
-* Guillaume Le Coq
+* Guillaume Le Coq (Tout Rendu)
 
-* Leïla Phebidias
+* Leïla Phebidias (Rendu 1 - 3)
+
+* Benoit Galmot (Rendu 4)
