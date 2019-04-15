@@ -136,7 +136,22 @@ Success rate is 80 percent (4/5), round-trip min/avg/max = 16/24/40 ms
 `R3 <--> R4`
 
 ``````
+R3#ping 10.3.100.10
 
+Type escape sequence to abort.
+Sending 5, 100-byte ICMP Echos to 10.3.100.10, timeout is 2 seconds:
+.!!!!
+Success rate is 80 percent (4/5), round-trip min/avg/max = 44/61/68 ms
+R3#
+
+------
+
+R4#ping 10.3.100.9
+
+Type escape sequence to abort.
+Sending 5, 100-byte ICMP Echos to 10.3.100.9, timeout is 2 seconds:
+!!!!!
+Success rate is 100 percent (5/5), round-trip min/avg/max = 32/34/36 ms
 ``````
 
 
@@ -144,7 +159,21 @@ Success rate is 80 percent (4/5), round-trip min/avg/max = 16/24/40 ms
 `R4 <--> R1`
 
 ``````
+R4#ping 10.3.100.14
 
+Type escape sequence to abort.
+Sending 5, 100-byte ICMP Echos to 10.3.100.14, timeout is 2 seconds:
+!!!!!
+Success rate is 100 percent (5/5), round-trip min/avg/max = 32/48/76 ms
+
+------
+
+R1#ping 10.3.100.13
+
+Type escape sequence to abort.
+Sending 5, 100-byte ICMP Echos to 10.3.100.13, timeout is 2 seconds:
+!!!!!
+Success rate is 100 percent (5/5), round-trip min/avg/max = 32/59/68 ms
 ``````
 
 
