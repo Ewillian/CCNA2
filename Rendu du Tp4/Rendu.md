@@ -36,8 +36,8 @@ Image Topo
 | ------------------ | :-------------: | :-------------: | :--------------: | :--------------: | ------------ | ----------- | ------------ |
 | `router1.lab3.tp4` | `10.3.100.1/30` |       `X`       |       `X`        | `10.3.100.14/30` |              |             |              |
 | `router2.lab3.tp4` | `10.3.100.2/30` | `10.3.100.5/30` |       `X`        |       `X`        |              |             |              |
-| `router4.lab3.tp4` |       `X`       | `10.3.100.6/30` | `10.3.100.9/30`  |       `X`        |              |             |              |
-| `router3.lab3.tp4` |       `X`       |       `X`       | `10.3.100.10/30` | `10.3.100.13/30` |              |             |              |
+| `router3.lab3.tp4` |       `X`       | `10.3.100.6/30` | `10.3.100.9/30`  |       `X`        |              |             |              |
+| `router4.lab3.tp4` |       `X`       |       `X`       | `10.3.100.10/30` | `10.3.100.13/30` |              |             |              |
 
 
 
@@ -49,7 +49,7 @@ Image Topo
 
 ## Installation et configuration des routeurs
 
-On commence par définir pour chaque interfaces une Ip Statique:
+- On commence par définir pour chaque interfaces une Ip Statique:
 
 ````
 // Entre en mode configuration
@@ -65,9 +65,91 @@ On commence par définir pour chaque interfaces une Ip Statique:
 (config)# exit
 ````
 
+`Exemple:`
+
+```
+R1#conf t
+Enter configuration commands, one per line.  End with CNTL/Z.
+R1(config)#interface FastEthernet 0/0
+R1(config-if)#ip address 10.3.100.1 255.255.255.252
+R1(config-if)#exit
+R1(config)#exit
+R1#
+*Mar  1 00:13:22.895: %LINK-3-UPDOWN: Interface FastEthernet0/0, changed state to up
+*Mar  1 00:13:23.387: %SYS-5-CONFIG_I: Configured from console by console
+*Mar  1 00:13:23.895: %LINEPROTO-5-UPDOWN: Line protocol on Interface FastEthernet0/0, changed state to up
+R1#
+```
+
 Ensuite, on teste de ping:
 
-//PING
+On s'attend à ceci :
+
+`R1<->R2<->R3<->R4<->R1`
+
+
+
+`R1 <--> R2`
+
+```
+R1#ping 10.3.100.2
+
+Type escape sequence to abort.
+Sending 5, 100-byte ICMP Echos to 10.3.100.2, timeout is 2 seconds:
+!!!!!
+Success rate is 100 percent (5/5), round-trip min/avg/max = 32/33/40 ms
+
+------
+
+R2#ping 10.3.100.1
+
+Type escape sequence to abort.
+Sending 5, 100-byte ICMP Echos to 10.3.100.1, timeout is 2 seconds:
+!!!!!
+Success rate is 100 percent (5/5), round-trip min/avg/max = 32/54/76 ms
+```
+
+
+
+`R2 <--> R3`
+
+```
+R2#ping 10.3.100.6
+
+Type escape sequence to abort.
+Sending 5, 100-byte ICMP Echos to 10.3.100.6, timeout is 2 seconds:
+!!!!!
+Success rate is 100 percent (5/5), round-trip min/avg/max = 32/39/64 ms
+
+------
+
+R3#ping 10.3.100.5
+
+Type escape sequence to abort.
+Sending 5, 100-byte ICMP Echos to 10.3.100.5, timeout is 2 seconds:
+.!!!!
+Success rate is 80 percent (4/5), round-trip min/avg/max = 16/24/40 ms
+```
+
+
+
+`R3 <--> R4`
+
+``````
+
+``````
+
+
+
+`R4 <--> R1`
+
+``````
+
+``````
+
+
+
+Voilà ! Tout fonctionne ! :heart_eyes: :blush: :ok_hand:
 
 
 
