@@ -14,9 +14,10 @@ Dépôt git dédié aux rendu du cours de CCNA2
 
 ## Raccourcis
 
-* [Rendu 1.](https://github.com/Ewillian/CCNA2/blob/master/Rendu%20du%20Tp1/Rendu.md#readmemd)
-* [Rendu 2.](https://github.com/Ewillian/CCNA2/blob/master/Rendu%20du%20Tp2/Rendu.md#readmemd)
+* [Rendu 1.](https://github.com/Ewillian/CCNA2/blob/master/Rendu%20du%20Tp1/Rendu.md)
+* [Rendu 2.](https://github.com/Ewillian/CCNA2/blob/master/Rendu%20du%20Tp2/Rendu.md)
 * [Rendu 3.](https://github.com/Ewillian/CCNA2/blob/master/Rendu%20du%20Tp3/Rendu.md)
+* [Rendu 4.](https://github.com/Ewillian/CCNA2/blob/master/Rendu%20du%20Tp4/Rendu.md)
 
 
 ## Membres du Projet
