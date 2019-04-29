@@ -85,11 +85,11 @@ Vlan30:
 
 | Hosts               | 10.33.30.0   |
 | :------------------ | :----------- |
-| `server1.menu3.tp4` | `10.33.10.1` |
-| `server2.menu3.tp4` | `10.33.10.2` |
-| `server3.menu3.tp4` | `10.33.10.3` |
-| `server4.menu3.tp4` | `10.33.10.4` |
-| `server5.menu3.tp4` | `10.33.10.5` |
+| `server1.menu3.tp4` | `10.33.30.1` |
+| `server2.menu3.tp4` | `10.33.30.2` |
+| `server3.menu3.tp4` | `10.33.30.3` |
+| `server4.menu3.tp4` | `10.33.30.4` |
+| `server5.menu3.tp4` | `10.33.30.5` |
 
 
 
