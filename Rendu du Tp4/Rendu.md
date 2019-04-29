@@ -93,8 +93,6 @@ Vlan30:
 
 
 
-
-
 ## Installation et configuration des routeurs
 
 - On commence par définir pour chaque interfaces une Ip Statique:
@@ -129,7 +127,7 @@ R1#
 R1#
 ```
 
-Ensuite, on teste de ping:
+Ensuite, on teste les pings:
 
 On s'attend à ceci :
 
@@ -230,5 +228,82 @@ Success rate is 100 percent (5/5), round-trip min/avg/max = 32/59/68 ms
 
 
 
-## Installation et configuration Vlans
+## 2 Configuration des Switchs côté serveur 
+
+- On configure le Vlan 30 présent dans la salle des serveurs
+
+D'abord on configure le switch,
+
+```
+IOU6#conf t
+IOU6(config)#vlan 30
+IOU6(config-vlan)#name server-network
+IOU6(config-vlan)#exit
+IOU6(config)#interface Ethernet 0/1
+IOU6(config-if)#switchport mode access
+IOU6(config-if)#switchport access vlan 30
+IOU6(config-if)#interface Ethernet 0/2
+IOU6(config-if)#switchport mode access
+IOU6(config-if)#switchport access vlan 30
+IOU6(config-if)#interface Ethernet 0/3
+IOU6(config-if)#switchport mode access
+IOU6(config-if)#switchport access vlan 30
+IOU6(config-if)#interface Ethernet 1/0
+IOU6(config-if)#switchport mode access
+IOU6(config-if)#switchport access vlan 30
+IOU6(config-if)#interface Ethernet 1/1
+IOU6(config-if)#switchport mode access
+IOU6(config-if)#switchport access vlan 30
+IOU6(config-if)#exit
+IOU6(config)#exit
+```
+
+Puis on vérifie si ça fonctionne
+
+`Server4 <--> Server 5`
+
+```
+VPCS> ping 10.33.30.4
+84 bytes from 10.33.30.4 icmp_seq=1 ttl=64 time=0.202 ms
+84 bytes from 10.33.30.4 icmp_seq=2 ttl=64 time=0.331 ms
+84 bytes from 10.33.30.4 icmp_seq=3 ttl=64 time=0.310 ms
+84 bytes from 10.33.30.4 icmp_seq=4 ttl=64 time=0.358 ms
+^C
+VPCS> ping 10.33.30.5
+84 bytes from 10.33.30.5 icmp_seq=1 ttl=64 time=0.198 ms
+84 bytes from 10.33.30.5 icmp_seq=2 ttl=64 time=0.289 ms
+84 bytes from 10.33.30.5 icmp_seq=3 ttl=64 time=0.384 ms
+84 bytes from 10.33.30.5 icmp_seq=4 ttl=64 time=0.302 ms
+^C
+```
+
+```
+VPCS> show ip
+
+NAME        : VPCS[1]
+IP/MASK     : 10.33.30.3/24
+```
+
+
+
+Ensuite on configure les 2 serveurs CentOS
+
+exemple :
+
+```
+[ewillian@server2 network-scripts]$ ping 10.33.30.5
+PING 10.33.3..5 (10.33.30.5) 56(84) bytes of data.
+64 bytes from 10.33.30.5: icmp-seq_1 ttl=64 time=1.12 ms
+64 bytes from 10.33.30.5: icmp-seq_2 ttl=64 time=1.56 ms
+64 bytes from 10.33.30.5: icmp-seq_3 ttl=64 time=1.00 ms
+64 bytes from 10.33.30.5: icmp-seq_4 ttl=64 time=0.937 ms
+^C
+--- 10.33.30.5 ping statistics ---
+4 packets transmitted, 4 received, 0% packet loss, time 3004ms
+rtt min/avg/max/mdev = 0.937/1.158/1.565/0.245 ms
+```
+
+
+
+## Installation et configuration Vlans 
 
