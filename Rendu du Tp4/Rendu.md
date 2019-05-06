@@ -30,18 +30,15 @@
 
 ## Topologie
 
-![Topologie Rendu 4](https://github.com/Ewillian/CCNA2/blob/master/Rendu%20du%20Tp4/captures/Topologie.png?raw=true)
+![Topologie Rendu 4](https://github.com/Ewillian/CCNA2/blob/master/Rendu%20du%20Tp4/captures/topologie1.png?raw=true)
 
 
 
 Routeurs :
 
-| Routeurs            | `10.3.100.0/30` | `10.3.100.4/30` | `10.3.100.8/30`  | `10.3.100.12/30` | `10.33.10.0`   | `10.33.20.0` | `10.33.30.0` |
-| ------------------- | :-------------: | :-------------: | :--------------: | :--------------: | -------------- | ------------ | ------------ |
-| `router1.menu3.tp4` | `10.3.100.1/30` |       `X`       |       `X`        | `10.3.100.14/30` | `10.33.10.254` |              |              |
-| `router2.menu3.tp4` | `10.3.100.2/30` | `10.3.100.5/30` |       `X`        |       `X`        |                |              |              |
-| `router3.menu3.tp4` |       `X`       | `10.3.100.6/30` | `10.3.100.9/30`  |       `X`        |                |              |              |
-| `router4.menu3.tp4` |       `X`       |       `X`       | `10.3.100.10/30` | `10.3.100.13/30` |                |              |              |
+| Routeurs            | `10.33.10.0`   | `10.33.20.0`   | `10.33.30.0`   |
+| ------------------- | -------------- | -------------- | -------------- |
+| `router1.menu3.tp4` | `10.33.10.254` | `10.33.20.254` | `10.33.30.254` |
 
 
 
@@ -67,7 +64,7 @@ Vlan10 :
 | `printer1.menu3.tp4` | `10.33.10.16`  |
 | `printer2.menu3.tp4` | `10.33.10.17`  |
 | `printer3.menu3.tp4` | `10.33.10.18`  |
-| `router1.menu3.tp4`  | `10.33.10.254` |
+| `3router1.menu3.tp4` | `10.33.10.254` |
 
 Vlan20:
 
@@ -93,142 +90,80 @@ Vlan30:
 
 
 
-## Installation et configuration des routeurs
+## 1 Configuration des clients et serveurs
 
-- On commence par définir pour chaque interfaces une Ip Statique:
+Exemple avec pro1: 
 
-````
-// Entre en mode configuration
-# conf t
-//Selection interface
-(config)# interface ethernet <NUMERO>
-//Definition de l'adresse ip
-(config-if)# ip address 10.5.1.254 255.255.255.0
-//Lancement de l'interface
-(config-if)# no shut
-//Exit
-(config-if)# exit
-(config)# exit
-````
+On configure les hots de chaque machine
 
-`Exemple:`
+```
+[ewillian@localhost ~]$ sudo echo 'pro1.menu3.tp4' | sudo tee /etc/hostname
+```
+
+Ensuite on configure l'IP statique 
+
+```
+[ewillian@pro1 ~]$ cat /etc/sysconfig/network-scripts/ifcfg-enp0s3
+DEVICE=enp0s3
+NAME=enp0s3
+BOOTPROTO=static
+ONBOOT=yes
+IPADDR=10.33.10.1
+NETMASK=255.255.255.0
+```
+
+On fait la même pour chaque machines virtuelles
+Puis on vérifie si ça marche avec des pings
+
+```
+[ewillian@pro1 ~]$ ping 10.33.10.5
+PING 10.33.10.5 (10.33.10.5) 56(84) bytes of data .
+64 bytes from 10.33.10.5: icmp_seq=1 ttl=64 time=8.25 ms
+64 bytes from 10.33.10.5: icmp_seq=2 ttl=64 time=0.664 ms
+^C
+--- 10.33.10.5 ping statistics ---
+2 packets transmitted, 2 received, 0% packet loss, time 1001ms
+rtt min/avg/max/mdev = 0.664/4.458/8.252/3.794 ms
+```
+
+
+
+## 2 Installation et configuration du routeur R1
+
+On configure le routeur 1:
 
 ```
 R1#conf t
-Enter configuration commands, one per line.  End with CNTL/Z.
-R1(config)#interface FastEthernet 0/0
-R1(config-if)#ip address 10.3.100.1 255.255.255.252
-R1(config-if)#exit
+R1(config)#interface fastEthernet 0/0.10
+R1(config-subif)#encapsulation dot1q 10
+R1(config-subif)#ip address 10.33.10.254 255.255.255.0
+R1(config-subif)#exit
+R1(config)#interface fastEthernet 0/0.20
+R1(config-subif)#encapsulation dot1Q 20
+R1(config-subif)#ip address 10.33.20.254 255.255.255.0
+R1(config-subif)#exit
+R1(config)#interface fastEthernet 0/0.30
+R1(config-subif)#encapsulation dot1Q 30
+R1(config-subif)#ip address 10.33.30.254 255.255.255.0
+R1(config-subif)#exit
 R1(config)#exit
-R1#
-*Mar  1 00:13:22.895: %LINK-3-UPDOWN: Interface FastEthernet0/0, changed state to up
-*Mar  1 00:13:23.387: %SYS-5-CONFIG_I: Configured from console by console
-*Mar  1 00:13:23.895: %LINEPROTO-5-UPDOWN: Line protocol on Interface FastEthernet0/0, changed state to up
-R1#
-```
 
-Ensuite, on teste les pings:
-
-On s'attend à ceci :
-
-`R1<->R2<->R3<->R4<->R1`
-
-
-
-`R1 <--> R2`
-
-```
-R1#ping 10.3.100.2
-
-Type escape sequence to abort.
-Sending 5, 100-byte ICMP Echos to 10.3.100.2, timeout is 2 seconds:
-!!!!!
-Success rate is 100 percent (5/5), round-trip min/avg/max = 32/33/40 ms
-
-------
-
-R2#ping 10.3.100.1
-
-Type escape sequence to abort.
-Sending 5, 100-byte ICMP Echos to 10.3.100.1, timeout is 2 seconds:
-!!!!!
-Success rate is 100 percent (5/5), round-trip min/avg/max = 32/54/76 ms
+R1#show ip int br
+*Mar  1 00:28:50.247: %SYS-5-CONFIG_I: Configured from console by console
+R1#show ip int br
+Interface                  IP-Address      OK? Method Status                Protocol
+FastEthernet0/0            unassigned      YES unset  up                    up
+FastEthernet0/0.10         10.33.10.254    YES manual up                    up
+FastEthernet0/0.20         10.33.20.254    YES manual up                    up
+FastEthernet0/0.30         10.33.30.254    YES manual up                    up
+FastEthernet1/0            unassigned      YES unset  administratively down down
+FastEthernet2/0            unassigned      YES unset  administratively down down
+FastEthernet3/0            unassigned      YES unset  administratively down down
 ```
 
 
 
-`R2 <--> R3`
-
-```
-R2#ping 10.3.100.6
-
-Type escape sequence to abort.
-Sending 5, 100-byte ICMP Echos to 10.3.100.6, timeout is 2 seconds:
-!!!!!
-Success rate is 100 percent (5/5), round-trip min/avg/max = 32/39/64 ms
-
-------
-
-R3#ping 10.3.100.5
-
-Type escape sequence to abort.
-Sending 5, 100-byte ICMP Echos to 10.3.100.5, timeout is 2 seconds:
-.!!!!
-Success rate is 80 percent (4/5), round-trip min/avg/max = 16/24/40 ms
-```
-
-
-
-`R3 <--> R4`
-
-``````
-R3#ping 10.3.100.10
-
-Type escape sequence to abort.
-Sending 5, 100-byte ICMP Echos to 10.3.100.10, timeout is 2 seconds:
-.!!!!
-Success rate is 80 percent (4/5), round-trip min/avg/max = 44/61/68 ms
-R3#
-
-------
-
-R4#ping 10.3.100.9
-
-Type escape sequence to abort.
-Sending 5, 100-byte ICMP Echos to 10.3.100.9, timeout is 2 seconds:
-!!!!!
-Success rate is 100 percent (5/5), round-trip min/avg/max = 32/34/36 ms
-``````
-
-
-
-`R4 <--> R1`
-
-``````
-R4#ping 10.3.100.14
-
-Type escape sequence to abort.
-Sending 5, 100-byte ICMP Echos to 10.3.100.14, timeout is 2 seconds:
-!!!!!
-Success rate is 100 percent (5/5), round-trip min/avg/max = 32/48/76 ms
-
-------
-
-R1#ping 10.3.100.13
-
-Type escape sequence to abort.
-Sending 5, 100-byte ICMP Echos to 10.3.100.13, timeout is 2 seconds:
-!!!!!
-Success rate is 100 percent (5/5), round-trip min/avg/max = 32/59/68 ms
-``````
-
-
-
-[x] Voilà ! Tout fonctionne ! :heart_eyes: :blush: :ok_hand:
-
-
-
-## 2 Configuration des Switchs côté serveur 
+## 3 Configuration des Switchs côté serveur 
 
 - On configure le Vlan 30 présent dans la salle des serveurs
 
@@ -284,8 +219,6 @@ NAME        : VPCS[1]
 IP/MASK     : 10.33.30.3/24
 ```
 
-
-
 Ensuite on configure les 2 serveurs CentOS
 
 exemple :
@@ -305,5 +238,22 @@ rtt min/avg/max/mdev = 0.937/1.158/1.565/0.245 ms
 
 
 
-## Installation et configuration Vlans 
+On fait la même chose pour les Vlans 20 et 10
+
+
+
+```
+pro12> ping 10.33.10.11
+84 bytes from 10.33.10.11 icmp_seq=1 ttl=64 time=0.470 ms
+84 bytes from 10.33.10.11 icmp_seq=2 ttl=64 time=0.652 ms
+^C
+pro12> ping 10.33.10.1
+84 bytes from 10.33.10.1 icmp_seq=1 ttl=64 time=0.847 ms
+84 bytes from 10.33.10.1 icmp_seq=2 ttl=64 time=0.714 ms
+^C
+pro12> ping 10.33.10.6
+84 bytes from 10.33.10.6 icmp_seq=1 ttl=64 time=1.265 ms
+84 bytes from 10.33.10.6 icmp_seq=2 ttl=64 time=0.689 ms
+^C
+```
 
