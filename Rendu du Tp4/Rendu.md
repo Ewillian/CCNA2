@@ -276,7 +276,15 @@ rh1> ip 10.33.20.2 /24 10.33.20.254
 Checking for duplicate address...
 PC1 : 10.33.20.2 255.255.255.0 gateway 10.33.20.254
 
-//CENTOS (à toi de taffer Benoit)
+//CENTOS
+[ewillian@pro1 ~]$ cat /etc/sysconfig/network-scripts/ifcfg-enp0s3
+DEVICE=enp0s3
+NAME=enp0s3
+BOOTPROTO=static
+ONBOOT=yes
+IPADDR=10.33.10.1
+NETMASK=255.255.255.0
+GATEWAY=10.33.10.254
 ``````
 
 
@@ -341,17 +349,67 @@ Mais bon ça prend beaucoup de temps à mettre en place.
 
 
 
-**Seconde solution** ACL ou Access Control List
+**Seconde solution** [ACL](https://routeur.clemanet.com/acl-cisco.php) ou Access Control List
 
 
 
-Ce qui donne :
+Ce que l'on veut c'est interdire la communication entre le Vlan 20 et les serveurs qui ne leurs sont pas attribués.
 
+``````
+//On Authorise Admin à accéder au server
+R1(config)#access-list 131 permit icmp host 10.33.20.1 host 10.33.30.3
+// Interdit l'accès au vlan 20 (10.33.0.0 /24) vers serveur3 (10.33.30.3 /24)
+R1(config)#access-list 131 deny icmp 10.33.20.0 0.0.0.255 10.33.30.3 0.0.0.255
+// On authorise tout autre trafic
+R1(config)#access-list 131 permit icmp any any
+// On selectionne l'interface concernée
+R1(config)#interface fastEthernet 0/2.30
+// On lui indique l'access-list en règle
+R1(config-subif)#ip access-group 131 in
+R1(config-subif)#exit
+``````
+
+On fait de même avec l'autre serveur.
+
+On teste !
+
+``````
+rh2> ping 10.33.30.3
+*10.33.20.254 icmp_seq=1 ttl=255 time=9.549 ms (ICMP type:3, code:13, Communication administratively prohibited)
+*10.33.20.254 icmp_seq=2 ttl=255 time=2.859 ms (ICMP type:3, code:13, Communication administratively prohibited)
+*10.33.20.254 icmp_seq=3 ttl=255 time=5.187 ms (ICMP type:3, code:13, Communication administratively prohibited)
 ``````
 
 ``````
+pro7> ping 10.33.30.3
+10.33.30.3 icmp_seq=1 timeout
+10.33.30.3 icmp_seq=2 timeout
+84 bytes from 10.33.30.3 icmp_seq=3 ttl=63 time=21.654 ms
+84 bytes from 10.33.30.3 icmp_seq=4 ttl=63 time=18.249 ms
+84 bytes from 10.33.30.3 icmp_seq=5 ttl=63 time=20.393 ms
+``````
+
+Tout fonctionne !
+
+Après configuration de l'ensemble de l'infrastructure, Admin peut accéder à tout le monde en le précisant que c'est une exception, pro et RH joignent les imprimantes et 2 serveurs !
+
+
+
+# 5 Limiter le débit
 
 
 
 
+
+# 6 Le VPN
+
+
+
+
+
+# 7 firewall frontal
+
+
+
+# 8 serveur web redondé, sécurisé
 
