@@ -301,15 +301,55 @@ trace to 10.33.30.3, 8 hops max, press Ctrl+C to stop
 
 
 
-# 4
+# 4 Limiter l'accès aux serveur
+
+Il est demandé dans ce menu de donner l'accès aux rh et aux pro à 2 serveurs chacun. 
+
+**Première solution** trouvé,  l'option `port-security` du `switchport mode access`.
+
+sont utilisation est la suivante :
+
+```
+Switch(config)#interface Ethernet 0/0
+Switch(config-if)#switchport mode access
+Switch(config-if)#switchport port-security
+Switch(config-if)#switchport port-security mac-address [MAC ADDRESS]
+```
+
+Autrement dit elle permet d'accepter les paquets venant d'une addresse MAC définie.
+
+Elle permet aussi au Switch de faire une action si il y a tentative d'accès.
+
+```
+Switch#Configure terminal
+Switch(config)#interface Ethernet 0/3
+Switch(config-if)#switchport mode access
+Switch(config-if)#switchport port-security violation [METHODE]
+```
+
+- **Shudown** : Elle désactive l’interface lorsque qu’il y a violation.
+- **Protect** : Toutes les trames ayant des adresses MAC sources inconnues sont bloquées et les autres autorisées.
+- **Restrict** : Alerte SNMP envoyée et le compteur de violation est incrémenté.
+
+Il y a un autre détail qu'il faut prendre en compte, par défaut, il est possible d’autoriser une seule adresse MAC sur chacun des ports. Pour y remédier on peut utiliser:
+
+```
+switchport port-security maximum x
+```
+
+Mais bon ça prend beaucoup de temps à mettre en place.
 
 
 
+**Seconde solution** ACL ou Access Control List
 
 
 
+Ce qui donne :
 
+``````
 
+``````
 
 
 
