@@ -36,7 +36,7 @@
 
 Routeurs :
 
-| Routeurs            | `10.33.10.0`   | `10.33.20.0`   | `10.33.30.0`   |
+| Routeur             | `10.33.10.0`   | `10.33.20.0`   | `10.33.30.0`   |
 | ------------------- | -------------- | -------------- | -------------- |
 | `router1.menu3.tp4` | `10.33.10.254` | `10.33.20.254` | `10.33.30.254` |
 
@@ -64,7 +64,7 @@ Vlan10 :
 | `printer1.menu3.tp4` | `10.33.10.16`  |
 | `printer2.menu3.tp4` | `10.33.10.17`  |
 | `printer3.menu3.tp4` | `10.33.10.18`  |
-| `3router1.menu3.tp4` | `10.33.10.254` |
+| `router1.menu3.tp4`  | `10.33.10.254` |
 
 Vlan20:
 
@@ -76,7 +76,7 @@ Vlan20:
 | `rh3.menu3.tp4`      | `10.33.20.4`   |
 | `printer4.menu3.tp4` | `10.33.20.5`   |
 | `printer5.menu3.tp4` | `10.33.20.6`   |
-| `router2.menu3.tp4`  | `10.33.20.254` |
+| `router1.menu3.tp4`  | `10.33.20.254` |
 
 Vlan30:
 
@@ -86,15 +86,13 @@ Vlan30:
 | `server2.menu3.tp4` | `10.33.30.2` |
 | `server3.menu3.tp4` | `10.33.30.3` |
 | `server4.menu3.tp4` | `10.33.30.4` |
-| `server5.menu3.tp4` | `10.33.30.5` |
+| `router1.menu3.tp4` | `10.33.30.5` |
 
 
 
 ## 1 Configuration des clients et serveurs
 
-Exemple avec pro1: 
-
-On configure les hots de chaque machine
+On configure les hosts de chaque machine
 
 ```
 [ewillian@localhost ~]$ sudo echo 'pro1.menu3.tp4' | sudo tee /etc/hostname
@@ -112,7 +110,18 @@ IPADDR=10.33.10.1
 NETMASK=255.255.255.0
 ```
 
-On fait la même pour chaque machines virtuelles
+
+
+La même chose sur les VPCS
+
+```
+rh1> ip 10.33.20.2 /24
+Checking for duplicate address...
+PC1 : 10.33.20.2 255.255.255.0
+```
+
+
+
 Puis on vérifie si ça marche avec des pings
 
 ```
@@ -128,52 +137,17 @@ rtt min/avg/max/mdev = 0.664/4.458/8.252/3.794 ms
 
 
 
-## 2 Installation et configuration du routeur R1
+## 2 Configuration des Switchs
 
-On configure le routeur 1:
-
-```
-R1#conf t
-R1(config)#interface fastEthernet 0/0.10
-R1(config-subif)#encapsulation dot1q 10
-R1(config-subif)#ip address 10.33.10.254 255.255.255.0
-R1(config-subif)#exit
-R1(config)#interface fastEthernet 0/0.20
-R1(config-subif)#encapsulation dot1Q 20
-R1(config-subif)#ip address 10.33.20.254 255.255.255.0
-R1(config-subif)#exit
-R1(config)#interface fastEthernet 0/0.30
-R1(config-subif)#encapsulation dot1Q 30
-R1(config-subif)#ip address 10.33.30.254 255.255.255.0
-R1(config-subif)#exit
-R1(config)#exit
-
-R1#show ip int br
-*Mar  1 00:28:50.247: %SYS-5-CONFIG_I: Configured from console by console
-R1#show ip int br
-Interface                  IP-Address      OK? Method Status                Protocol
-FastEthernet0/0            unassigned      YES unset  up                    up
-FastEthernet0/0.10         10.33.10.254    YES manual up                    up
-FastEthernet0/0.20         10.33.20.254    YES manual up                    up
-FastEthernet0/0.30         10.33.30.254    YES manual up                    up
-FastEthernet1/0            unassigned      YES unset  administratively down down
-FastEthernet2/0            unassigned      YES unset  administratively down down
-FastEthernet3/0            unassigned      YES unset  administratively down down
-```
-
-
-
-## 3 Configuration des Switchs côté serveur 
-
-- On configure le Vlan 30 présent dans la salle des serveurs
-
-D'abord on configure le switch,
+- On configure les Switchs ainsi que leurs Vlans
 
 ```
 IOU6#conf t
+//Création du Vlan 30
 IOU6(config)#vlan 30
 IOU6(config-vlan)#name server-network
 IOU6(config-vlan)#exit
+//Ajout de chaques interfaces liées à une machine virtuelle dans le vlan
 IOU6(config)#interface Ethernet 0/1
 IOU6(config-if)#switchport mode access
 IOU6(config-if)#switchport access vlan 30
@@ -214,7 +188,6 @@ VPCS> ping 10.33.30.5
 
 ```
 VPCS> show ip
-
 NAME        : VPCS[1]
 IP/MASK     : 10.33.30.3/24
 ```
@@ -238,9 +211,7 @@ rtt min/avg/max/mdev = 0.937/1.158/1.565/0.245 ms
 
 
 
-On fait la même chose pour les Vlans 20 et 10
-
-
+On fait la même chose pour les Vlans 20 et 10.
 
 ```
 pro12> ping 10.33.10.11
@@ -256,4 +227,91 @@ pro12> ping 10.33.10.6
 84 bytes from 10.33.10.6 icmp_seq=2 ttl=64 time=0.689 ms
 ^C
 ```
+
+
+
+# 3 Router-on-a-stick
+
+On commence par configurer le Switch lié au routeur:
+
+``````
+IOU2#conf t
+Enter configuration commands, one per line.  End with CNTL/Z.
+// Création Vlan
+IOU2(config)#vlan 10
+IOU2(config-vlan)#name client-network
+IOU2(config-vlan)#exit
+// Intégre Interface dans Vlan
+IOU2(config)#interface Ethernet 0/0
+IOU2(config-if)#switchport mode access
+IOU2(config-if)#switchport access vlan 10
+IOU2(config-if)#exit
+// Mode trunk entre Switch et Routeur + Autorise paquets vlan précisé
+(config)# interface Ethernet 0/1
+(config-if)# switchport trunk encapsulation dot1q
+(config-if)# switchport mode trunk
+(config-if)#switchport trunk allowed vlan add 10
+``````
+
+
+
+Quant au routeur :
+
+``````
+//Déninition des ip des sous interfaces
+R1(config)#interface fastEthernet 0/0.10
+R1(config-subif)#encapsulation dot1q 10
+R1(config-subif)#ip address 10.33.10.254 255.255.255.0
+R1(config-subif)#no shut
+R1(config-subif)#exit
+``````
+
+
+
+et les clients :
+
+``````
+//VPCS ajout Gateway
+rh1> ip 10.33.20.2 /24 10.33.20.254
+Checking for duplicate address...
+PC1 : 10.33.20.2 255.255.255.0 gateway 10.33.20.254
+
+//CENTOS (à toi de taffer Benoit)
+``````
+
+
+
+A ce stade tous le monde peut se ping.
+
+``````
+rh1> trace 10.33.10.1
+trace to 10.33.10.1, 8 hops max, press Ctrl+C to stop
+ 1   10.33.20.254   7.597 ms  8.787 ms  8.841 ms
+ 2   *10.33.10.1   18.642 ms 
+``````
+
+
+
+``````
+rh1> trace 10.33.30.3
+trace to 10.33.30.3, 8 hops max, press Ctrl+C to stop
+ 1   10.33.20.254   8.848 ms  9.811 ms  10.392 ms
+ 2   *10.33.30.3   15.672 ms 
+``````
+
+
+
+# 4
+
+
+
+
+
+
+
+
+
+
+
+
 
