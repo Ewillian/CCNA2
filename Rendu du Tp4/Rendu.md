@@ -403,6 +403,21 @@ Tout fonctionne !
 
 Après configuration de l'ensemble de l'infrastructure, Admin peut accéder à tout le monde en le précisant que c'est une exception, pro et RH joignent les imprimantes et 2 serveurs !
 
+```
+[ewillian@admin ~] ping 10.33.30.3
+PING 10.33.30.3 (10.33.30.3) 56(84) bytes of data.
+64 bytes from 10.33.30.3: icmp_seq=2 ttl=63 time=17.6 ms
+64 bytes from 10.33.30.3: icmp_seq=3 ttl=63 time=19.8 ms
+64 bytes from 10.33.30.3: icmp_seq=4 ttl=63 time=19.3 ms
+^C
+--- 10.33.30.3 ping statistics ---
+4 packets transmitted, 3 received, 25% packet loss, time 3004ms
+rtt min/avg/max/mdev = 17.609/18.931/19.828/8.954 ms
+[ewillian@admin ~] traceroute 10.33.30.3
+traceroute to 10.33.30.3 (10.33.30.3), 30 hops max, 60 byte packets
+ 1 gateway (10.33.20.254) 13.375 ms !X 13.45 ms !X 3.620 ms !X
+```
+
 
 
 # 5 Limiter le débit
