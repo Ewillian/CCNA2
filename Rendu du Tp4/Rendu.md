@@ -369,6 +369,16 @@ R1(config-subif)#ip access-group 131 in
 R1(config-subif)#exit
 ``````
 
+Ce qui donne :
+
+``````
+R1#show access-lists
+Extended IP access list 131
+    10 permit icmp host 10.33.20.1 host 10.33.30.3 (6 matches)
+    20 deny icmp 10.33.20.0 0.0.0.255 10.33.30.0 0.0.0.255
+    30 permit icmp any any (10 matches)
+``````
+
 On fait de même avec l'autre serveur.
 
 On teste !
