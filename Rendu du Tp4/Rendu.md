@@ -422,9 +422,89 @@ traceroute to 10.33.30.3 (10.33.30.3), 30 hops max, 60 byte packets
 
 # 5 Limiter le débit
 
+L'objectif est de limiter le débit descendant WAN à 5Mo/sec pour l'admin, pro, et RH ainsi qu'à 50Mo/sec pour les serveurs.
 
+Pour cela nous allons réutilisé l'ACL, mais avant ça mettons en place une NAT.
 
+```
+R1(config)#interface fastEthernet 1/0
+R1(config-if)#ip address dhcp
+R1(config-if)#exit
+R1(config)#exit
+R1#show ip int br
+Interface                  IP-Address      OK? Method Status                Protocol
+FastEthernet0/0            unassigned      YES NVRAM  up                    up
+FastEthernet0/0.10         10.33.10.254    YES NVRAM  up                    up
+FastEthernet0/0.20         10.33.20.254    YES NVRAM  up                    up
+FastEthernet0/0.30         10.33.30.254    YES NVRAM  up                    up
+FastEthernet2/0            192.168.122.53  YES DHCP   up                    up
+```
 
+L'interface FastEthernet2/0 à bien récupéré un adresse ip.
+
+```
+R1#ping 8.8.8.8
+Type escape sequence to abort.
+Sending 5, 100-byte ICMP Echos to 8.8.8.8, timeout is 2 seconds:
+.!!!!
+Success rate is 80 percent (4/5), round-trip min/avg/max = 20/20/20 ms
+```
+
+R4 est bien connecté à internet. il ne reste plus qu'à partager internet à tous les autres.
+
+```
+R4#conf t
+Enter configuration commands, one per line.  End with CNTL/Z.
+//Définition interface interne et externe
+R1(config)#interface fastEthernet 0/0
+R1(config-if)#ip nat inside
+R1(config)#interface fastEthernet 1/0
+R1(config-if)#ip nat outside
+R1(config-if)#exit
+//Définition autorisations
+R1(config)#ip nat inside source list 1 interface fastEthernet 0/0 overload
+R1(config)#access-list 1 permit any
+```
+
+ Passons ensuite à l'ACL.
+
+```
+// Pour correspondre au trafic
+ip access-list extended ACL_50Mbps
+permit tcp 10.33.30.0 0.0.0.255 any eq www
+// On "Class" le trafic
+class-map Link_50Mbps
+match access-group ACL_50Mbps
+// Appliquer la politique contre la classe
+policy-map Policy_50Mbps
+class Link_50Mbps
+police 50000000 8000 conform-action transmit exceed-action drop
+interface fastEthernet0/0.30
+// On applique la police sur le trafic allant vers les serveurs
+service-policy output Policy_50Mbps
+```
+
+et voila !
+
+Quant aux reste, 
+
+```
+// Pour correspondre au trafic
+ip access-list extended ACL_15Mbps
+permit tcp 10.33.10.0 0.0.0.255 any eq www
+// On "Class" le trafic
+class-map Link_15Mbps
+match access-group ACL_15Mbps
+// Appliquer la politique contre la classe
+policy-map Policy_15Mbps
+class Link_50Mbps
+police 15000000 8000 conform-action transmit exceed-action drop
+interface fastEthernet0/0.10
+// On applique la police sur le trafic allant vers les serveurs
+service-policy output Policy_15Mbps
+```
+
+Voila !
 
 # 6 Le VPN
 
